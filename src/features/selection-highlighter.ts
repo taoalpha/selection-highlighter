@@ -12,7 +12,7 @@ class SelectionHighlighter extends Feature {
   name = 'Select To Highlight';
   description =
       'Select any text and highlight all occurrences on the page, `excludeParents` may have performance impact, so careful to use.';
-  enabled = false;
+  enabled = true;
   value = JSON.stringify(
       {
         excludeSelf: true,
