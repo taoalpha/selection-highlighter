@@ -41,7 +41,7 @@ class SelectionHighlighter extends Feature {
     const config: HighlightConfig = JSON.parse(this.value);
     if (config.excludeUrlPatterns && config.excludeUrlPatterns.length) {
       const theUrl = location.href;
-      if (config.excludeUrlPatterns.some(regex => new RegExp(regex).test(theUrl)) {
+      if (config.excludeUrlPatterns.some(regex => new RegExp(regex).test(theUrl))) {
           document.removeEventListener('selectionchange', this.listener);
           this.resetAll();
           return;
