@@ -2,7 +2,7 @@
 
 Automatically highlight all occurrences of current selection on current page.
 
-Supported options:
+Supported options (open option page to change):
 
 ```
 {
