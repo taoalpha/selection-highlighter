@@ -6,6 +6,7 @@ interface HighlightConfig {
   excludeSelf?: boolean;
   excludeParents?: string[];
   noHighlightWithin?: string[];
+  excludeUrlPatterns?: string[];
 }
 
 class SelectionHighlighter extends Feature {
@@ -19,6 +20,7 @@ class SelectionHighlighter extends Feature {
         highlightStyle: 'background-color: yellow;',
         excludeParents: [],
         noHighlightWithin: ['input', 'textarea', '[contentEditable]'],
+        excludeUrlPatterns: [],
       },
       null, 2);
 
@@ -36,6 +38,16 @@ class SelectionHighlighter extends Feature {
   }
 
   async run() {
+    const config: HighlightConfig = JSON.parse(this.value);
+    if (config.excludeUrlPatterns && config.excludeUrlPatterns.length) {
+      const theUrl = location.href;
+      if (config.excludeUrlPatterns.some(regex => new RegExp(regex).test(theUrl))) {
+          document.removeEventListener('selectionchange', this.listener);
+          this.resetAll();
+          return;
+      }
+    }
+    
     document.addEventListener('selectionchange', this.listener);
     this.teardownQueue.push(() => {
       document.removeEventListener('selectionchange', this.listener);
