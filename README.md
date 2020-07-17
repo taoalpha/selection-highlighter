@@ -14,7 +14,8 @@ Supported options (open option page to change):
     "textarea",
     "[contentEditable]"
   ],
-  "excludeUrlPatterns": []
+  "excludeUrlPatterns": [],
+  "minCharSize": 3
 }
 ```
 
@@ -23,3 +24,4 @@ Supported options (open option page to change):
 - `excludeParents`: exclude highlights within given selectors
 - `noHighlightWithin`: no highlight if selection in given selectors
 - `excludeUrlPatterns`: disable for given url patterns, e.g: `"^(?!.*googlesource).*"` will only enable for `googlesource` urls, like gerrit-review.googlesource.com etc
+- `minCharSize`: ignore selection with size below the threshold
