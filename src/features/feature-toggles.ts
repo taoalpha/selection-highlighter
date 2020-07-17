@@ -4,7 +4,7 @@ import {Settings} from '../types';
 class FeatureToggles extends Feature {
   name = 'Feature Toggles';
   description = 'Toggle features on/off on every page';
-  enabled = true;
+  enabled = false;
 
   private elId = 'extension-feature-toggles';
 

@@ -7,6 +7,7 @@ interface HighlightConfig {
   excludeParents?: string[];
   noHighlightWithin?: string[];
   excludeUrlPatterns?: string[];
+  minCharSize?: number;
 }
 
 class SelectionHighlighter extends Feature {
@@ -21,6 +22,7 @@ class SelectionHighlighter extends Feature {
         excludeParents: [],
         noHighlightWithin: ['input', 'textarea', '[contentEditable]'],
         excludeUrlPatterns: [],
+        minCharSize: 3,
       },
       null, 2);
 
@@ -47,7 +49,7 @@ class SelectionHighlighter extends Feature {
           return;
       }
     }
-    
+
     document.addEventListener('selectionchange', this.listener);
     this.teardownQueue.push(() => {
       document.removeEventListener('selectionchange', this.listener);
@@ -70,15 +72,16 @@ class SelectionHighlighter extends Feature {
   }
 
   private highlight() {
+    const config: HighlightConfig = JSON.parse(this.value);
     const curSelectedText = this.selectedText;
-    // ignore no selection or text less than 2 char
-    if (!curSelectedText || curSelectedText.length <= 2) return;
+
+    // ignore no selection or text less than minCharSize char
+    if (!curSelectedText || curSelectedText.length < config.minCharSize) return;
 
     // no change on selected text
     if (curSelectedText === this.currentHighlightText) return;
 
     // ignore when selection inside of ignore elements
-    const config: HighlightConfig = JSON.parse(this.value);
     if (config.noHighlightWithin && config.noHighlightWithin.length) {
       const currentSelection = window.getSelection();
       const walkNode = currentSelection && currentSelection.anchorNode;
@@ -175,6 +178,11 @@ class SelectionHighlighter extends Feature {
                       NodeFilter.FILTER_REJECT;
                 }
               }
+            }
+
+            // filter out style tag, do not modify style
+            if (this.hasParentInChain(node, ["style"])) {
+              return NodeFilter.FILTER_REJECT;
             }
 
             // exclude defined parent selectors
